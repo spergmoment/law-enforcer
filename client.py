@@ -82,6 +82,37 @@ async def on_message(msg):
             await c.send(f"{m}, I have **banned** {member}.\nReason: {reason}")
         except Exception as e:
             await c.send(f"Error while banning user: {e}")
+    if cmd == 'unban':
+        if not g.me.guild_permissions.ban_members:
+            return await c.send("I lack the permissions to ban members.")
+        if not m.guild_permissions.ban_members:
+            return await c.send("You must have the `BAN_MEMBERS` permission to do this.")
+        if len(args) < 1:
+            return await c.send(f"Please enter a user ID to unban.\n"
+            f"To get a user ID, enable **Developer Mode** in the **Appearance** tab in settings, then right-click the user and select **\"Copy ID.\"**")
+        if math.isnan(int(args[0])):
+            return await c.sned("Please enter a user ID to unban.")
+        id = int(args[0])
+        reason = None
+        if len(args) < 2:
+            reason = "None"
+        else:
+            reason = args[1]
+        ban = None
+        try:
+            ban = await g.fetch_ban(id)
+        except:
+            return await c.send("This user is not banned.")
+        try:
+            await g.unban(ban[0], reason=reason)
+            await c.send(f"Successfully unbanned {ban[0]}.\nReason: {reason}")
+            try:
+                await ban[0].send(f"You have been **unbanned** in {g} by {m}.\nReason: {reason}")
+            except:
+                pass
+        except Exception as e:
+            await c.send(f"Error while unbanning user.\n{e}")
+        
     if cmd == "kick":
         if not g.me.guild_permissions.kick_members:
             return await c.send("I lack the permissions to kick members.")
@@ -240,12 +271,14 @@ async def on_message(msg):
     if cmd == "help":
         helpEmb = discord.Embed()
         if not len(args) > 0:
-            helpEmb.set_author(name="Invite me here!", url="https://discordapp.com/api/oauth2/authorize?client_id=696124534679535728&permissions=268561591&scope=bot", icon_url=client.user.avatar_url)
+            helpEmb.set_author(name="Invite me here!", 
+            url="https://discordapp.com/api/oauth2/authorize?client_id=696124534679535728&permissions=268561591&scope=bot", icon_url=client.user.avatar_url)
             helpEmb.title = "All commands"
             helpEmb.description = "Here is a list of all commands I have."
             helpEmb.add_field(
                 name="ping", value="Get the current Client ping and API ping", inline=False)
             helpEmb.add_field(name="ban", value="Ban a user", inline=False)
+            helpEmb.add_field(name="unban", value="Unban a user", inline=False)
             helpEmb.add_field(name="kick", value="Kick a user", inline=False)
             helpEmb.add_field(name="mute", value="Mute a user", inline=False)
             helpEmb.add_field(name="unmute", value="Unmute a user", inline=False)
@@ -293,6 +326,13 @@ async def on_message(msg):
             helpEmb.add_field(name="Examples", value=f"\\{prefix}clear 40\n\\{prefix}clear", inline=False)
             helpEmb.add_field(name="Extra Notes", value="You may clear as many messages as you want (up to 10000), but beware higher (>2000) values will be slow.")
             helpEmb.add_field(name="Required Permissions", value="`MANAGE_MESSAGES`\n`READ_MESSAGE_HISTORY`")
+        elif args[0] == "unban":
+            helpEmb.title = "unban"
+            helpEmb.description = "Unban a banned user."
+            helpEmb.add_field(name="Usage", value=f"\\{prefix}unban (user ID) (reason || None)", inline=False)
+            helpEmb.add_field(name="Examples", value=f"\\{prefix}unban @monkey is not dumb\n\\{prefix}unban @monkey", inline=False)
+            helpEmb.add_field(name="Extra Notes", value="The user is DMed upon being unbanned (If they can be DMed).")
+            helpEmb.add_field(name="Required Permissions", value="`BAN_MEMBERS`")
         else:
             helpEmb.title = "Invalid command!"
             helpEmb.description = f"The command you entered, {args[0]}, is invalid."
