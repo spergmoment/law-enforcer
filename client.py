@@ -273,7 +273,7 @@ async def on_message(msg):
         if not m.id in owner_ids.ids:
             return await c.send("You must be a bot owner to use this command.")
         await c.send("Restarting...")
-        subprocess.Popen("pm2 restart 4".split());
+        subprocess.Popen("pm2 restart 3".split());
     if cmd == 'info':
         global startTime
         await c.send(f"```Owner: monkey#4097\nOwner ID: 694331934339498058\n"
@@ -306,14 +306,14 @@ async def on_message(msg):
             helpEmb.title = "ban"
             helpEmb.description = "Ban a user from the server."
             helpEmb.add_field(name="Usage", value=f"\\{prefix}ban (user) (reason || None)", inline=False)
-            helpEmb.add_field(name="Examples", value=f"\\{prefix}ban @monkey dumb stupid\n\\{prefix}ban @monkey", inline=False)
+            helpEmb.add_field(name="Examples", value=f"\\{prefix}ban <@{owner_ids.ids[random.randint(0, 1)]}> dumb stupid\n\\{prefix}ban <@{owner_ids.ids[random.randint(0, 1)]}>", inline=False)
             helpEmb.add_field(name="Extra Notes", value="The user is DMed upon being banned.")
             helpEmb.add_field(name="Required Permissions", value="`BAN_MEMBERS`")
         elif args[0] == "kick":
             helpEmb.title = "kick"
             helpEmb.description = "Kick a user from the server."
             helpEmb.add_field(name="Usage", value=f"\\{prefix}kick (user) (reason || None)", inline=False)
-            helpEmb.add_field(name="Examples", value=f"\\{prefix}kick @monkey don't do that again\n\\{prefix}kick @monkey", inline=False)
+            helpEmb.add_field(name="Examples", value=f"\\{prefix}kick <@{owner_ids.ids[random.randint(0, 1)]}> don't do that again\n\\{prefix}kick <@{owner_ids.ids[random.randint(0, 1)]}>", inline=False)
             helpEmb.add_field(name="Extra Notes", value=f"The user is DMed upon being kicked. Additionally, they are given a one-time invite to rejoin with."
             f"\nIn later versions, there will be options to disable this.")
             helpEmb.add_field(name="Required Permissions", value="`KICK_MEMBERS`")
@@ -321,14 +321,14 @@ async def on_message(msg):
             helpEmb.title = "mute"
             helpEmb.description = "Mute a user for a certain amount of time."
             helpEmb.add_field(name="Usage", value=f"\\{prefix}mute (user) (time in hours) (reason || None)", inline=False)
-            helpEmb.add_field(name="Example", value=f"\\{prefix}mute @monkey 24 stop spamming\n\\{prefix}mute @monkey 0.5", inline=False)
+            helpEmb.add_field(name="Example", value=f"\\{prefix}mute <@{owner_ids.ids[random.randint(0, 1)]}> 24 stop spamming\n\\{prefix}mute <@{owner_ids.ids[random.randint(0, 1)]}> 0.5", inline=False)
             helpEmb.add_field(name="Extra Notes", value="The user is DMed when they are muted.")
             helpEmb.add_field(name="Required Permissions", value="`MUTE_MEMBERS`\n`KICK_MEMBERS`")
         elif args[0] == "unmute":
             helpEmb.title = "unmute"
             helpEmb.description = "Unmute a user."
             helpEmb.add_field(name="Usage", value=f"\\{prefix}unmute (user) (reason || None)", inline=False)
-            helpEmb.add_field(name="Examples", value=f"\\{prefix}unmute @monkey said sorry in dms\n\\{prefix}unmute @monkey", inline=False)
+            helpEmb.add_field(name="Examples", value=f"\\{prefix}unmute <@{owner_ids.ids[random.randint(0, 1)]}> said sorry in dms\n\\{prefix}unmute <@{owner_ids.ids[random.randint(0, 1)]}>", inline=False)
             helpEmb.add_field(name="Extra Notes", value="The user is DMed when unmuted.")
             helpEmb.add_field(name="Required Permissions", value="`MUTE_MEMBERS`\n`KICK_MEMBERS`")
         elif args[0] == "clear":
@@ -342,7 +342,7 @@ async def on_message(msg):
             helpEmb.title = "unban"
             helpEmb.description = "Unban a banned user."
             helpEmb.add_field(name="Usage", value=f"\\{prefix}unban (user ID) (reason || None)", inline=False)
-            helpEmb.add_field(name="Examples", value=f"\\{prefix}unban @monkey is not dumb\n\\{prefix}unban @monkey", inline=False)
+            helpEmb.add_field(name="Examples", value=f"\\{prefix}unban <@{owner_ids.ids[random.randint(0, 1)]}> is not dumb\n\\{prefix}unban <@{owner_ids.ids[random.randint(0, 1)]}>", inline=False)
             helpEmb.add_field(name="Extra Notes", value="The user is DMed upon being unbanned (If they can be DMed).")
             helpEmb.add_field(name="Required Permissions", value="`BAN_MEMBERS`")
         else:
