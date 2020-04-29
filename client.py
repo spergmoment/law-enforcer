@@ -321,7 +321,7 @@ async def on_message(msg):
             helpEmb.title = "mute"
             helpEmb.description = "Mute a user for a certain amount of time."
             helpEmb.add_field(name="Usage", value=f"\\{prefix}mute (user) (time in hours) (reason || None)", inline=False)
-            helpEmb.add_field(name="Example", value=f"\\{prefix}mute <@{owner_ids.ids[random.randint(0, 1)]}> 24 stop spamming\n\\{prefix}mute <@{owner_ids.ids[random.randint(0, 1)]}> 0.5", inline=False)
+            helpEmb.add_field(name="Examples", value=f"\\{prefix}mute <@{owner_ids.ids[random.randint(0, 1)]}> 24 stop spamming\n\\{prefix}mute <@{owner_ids.ids[random.randint(0, 1)]}> 0.5", inline=False)
             helpEmb.add_field(name="Extra Notes", value="The user is DMed when they are muted.")
             helpEmb.add_field(name="Required Permissions", value="`MUTE_MEMBERS`\n`KICK_MEMBERS`")
         elif args[0] == "unmute":
@@ -350,9 +350,7 @@ async def on_message(msg):
             helpEmb.description = f"The command you entered, {args[0]}, is invalid."
             helpEmb.set_footer(text=f"Use {prefix}help for a list of commands.", icon_url=client.user.avatar_url)
         await c.send(embed=helpEmb)
-def login():
-    try:
-        client.run(token)
-    except discord.errors.LoginFailure as err:
-        print(f"Failed to login. Token: {token}\n{err}")
-login()
+try:
+    client.run(token)
+except discord.errors.LoginFailure as err:
+    print(f"Failed to login. Token: {token}\n{err}")
