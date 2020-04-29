@@ -140,6 +140,10 @@ async def on_message(msg):
             return await c.send("I lack the permissions to mute members.")
         if not m.guild_permissions.mute_members:
             return await c.send("You must have the `MUTE_MEMBERS` permission to do this.")
+        if not g.me.guild_permissions.kick_members:
+            return await c.send("I lack the permissions to kick members.")
+        if not m.guild_permissions.kick_members:
+            return await c.send("You must have the `KICK_MEMBERS` permission to do this.")
         if not muted_role:
             return await c.send("No muted role exists. Please create one.")
         if not msg.mentions:
@@ -168,6 +172,14 @@ async def on_message(msg):
         except Exception as e:
             await c.send(f"Error while muting member: {e}")
     if cmd == "unmute":
+        if not g.me.guild_permissions.mute_members:
+            return await c.send("I lack the permissions to mute members.")
+        if not m.guild_permissions.mute_members:
+            return await c.send("You must have the `MUTE_MEMBERS` permission to do this.")
+        if not g.me.guild_permissions.kick_members:
+            return await c.send("I lack the permissions to kick members.")
+        if not m.guild_permissions.kick_members:
+            return await c.send("You must have the `KICK_MEMBERS` permission to do this.")
         if not muted_role:
             return await c.send("No muted role exists.")
         if not msg.mentions:
@@ -311,14 +323,14 @@ async def on_message(msg):
             helpEmb.add_field(name="Usage", value=f"\\{prefix}mute (user) (time in hours) (reason || None)", inline=False)
             helpEmb.add_field(name="Example", value=f"\\{prefix}mute @monkey 24 stop spamming\n\\{prefix}mute @monkey 0.5", inline=False)
             helpEmb.add_field(name="Extra Notes", value="The user is DMed when they are muted.")
-            helpEmb.add_field(name="Required Permissions", value="`MUTE_MEMBERS`")
+            helpEmb.add_field(name="Required Permissions", value="`MUTE_MEMBERS`\n`KICK_MEMBERS`")
         elif args[0] == "unmute":
             helpEmb.title = "unmute"
             helpEmb.description = "Unmute a user."
             helpEmb.add_field(name="Usage", value=f"\\{prefix}unmute (user) (reason || None)", inline=False)
             helpEmb.add_field(name="Examples", value=f"\\{prefix}unmute @monkey said sorry in dms\n\\{prefix}unmute @monkey", inline=False)
             helpEmb.add_field(name="Extra Notes", value="The user is DMed when unmuted.")
-            helpEmb.add_field(name="Required Permissions", value="`MUTE_MEMBERS`")
+            helpEmb.add_field(name="Required Permissions", value="`MUTE_MEMBERS`\n`KICK_MEMBERS`")
         elif args[0] == "clear":
             helpEmb.title = "clear"
             helpEmb.description = "Clear a certain amount of messages."
