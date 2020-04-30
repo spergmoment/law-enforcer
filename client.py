@@ -24,11 +24,13 @@ def insert_returns(body):
     if isinstance(body[-1], ast.With):
         insert_returns(body[-1].body)
 # used for threading timers
-async def unmute(m, t, r, role, user):
+async def unmute(m, t, r, role):
     await asyncio.sleep(t*60*60)
+    if not role in m.roles:
+        return
     await m.remove_roles(role, reason=r)
     try:
-        await m.send(f"You've been unmuted in {m.guild} by {user}.\nReason: {r}")
+        await m.send(f"You've been automatically unmuted in {m.guild}.")
     except:
         pass
 
@@ -119,12 +121,13 @@ async def on_message(msg):
             f"To get a user ID, enable **Developer Mode** in the **Appearance** tab in settings, then right-click the user and select **\"Copy ID.\"**")
         # makes sure its a number
         if math.isnan(int(args[0])):
-            return await c.sned("Please enter a user ID to unban.")
+            return await c.send("Please enter a user ID to unban.")
         id = int(args[0])
         reason = " ".join(args[1:len(args)]) or "None"
         ban = None
         try:
-            # fetch the ban for that id
+            # fetch the ban for that user
+            user = client.get_user(id)
             ban = await g.fetch_ban(id)
         except:
             # fetch_ban throws an exception if the user isn't banned, so catch it here to notify the user
@@ -144,6 +147,10 @@ async def on_message(msg):
             return await c.send(botperms('kick members'))
         if not m.guild_permissions.kick_members:
             return await c.send(userperms('kick_members'))
+        if not g.me.guild_permissions.create_instant_invite:
+            return await c.send(botperms('create invites'))
+        if not m.guild_permissions.create_instant_invite:
+            return await c.send(userperms('create_instant_invite'))
         if not msg.mentions:
             return await c.send("Please provide a member to kick.")
         member = msg.mentions[0]
@@ -152,9 +159,10 @@ async def on_message(msg):
             return await c.send(botlower)
         if m.top_role < member.top_role:
             return await c.send(userlower)
+        inv = await c.create_invite(reason=f"Temporary invite for {member}", max_uses=1)
         try:
             try:
-                await member.send(f"{member}, you have been **kicked** from {g} by {m}.\nReason: {reason}")
+                await member.send(f"{member}, you have been **kicked** from {g} by {m}.\nReason: {reason}\nI have created a one-time invite for you to join back with: {inv}")
             except:
                 pass
             await member.kick(reason=reason)
@@ -198,7 +206,7 @@ async def on_message(msg):
             except:
                 pass
             # goes to the unmute function, muting them for the specified time
-            await unmute(mem, time, "Mute time expired", muted_role, m)
+            await unmute(mem, time, "Mute time expired", muted_role)
         except Exception as e:
             await c.send(f"Error while muting member: {e}")
     if cmd == "unmute":
@@ -224,6 +232,10 @@ async def on_message(msg):
             return await c.send("This member is not muted.")
         await mem.remove_roles(muted_role, reason=reason)
         await c.send(f"Successfully unmuted {mem}.\nReason: {reason}")
+        try:
+            await mem.send(f"You've been unmuted in {g} by {m}.\nReason: {reason}")
+        except:
+            pass
     if cmd == "eval":
         # makes sure the user is the owner, check constants
         if not m.id in ids:
@@ -361,7 +373,7 @@ async def on_message(msg):
         elif args[0] == "kick":
             helpEmb = helpCmd(helpEmb, 'kick', 'Kick a user from the server.', "(user) (reason || None)", f"{id1} don't do that again", id2,
             f"The user is DMed upon being kicked. Additionally, they are given a one-time invite to rejoin with."
-            f"\nIn later versions, there will be options to disable this.", "`KICK_MEMBERS`")
+            f"\nIn later versions, there will be options to disable this.", "`KICK_MEMBERS`\n`CREATE_INSTANT_INVITE`")
         elif args[0] == "mute":
             helpEmb = helpCmd(helpEmb, 'mute', "Mute a user for a certain amount of time.", '(user) (reason || None)', f"{id1} 24 stop spamming", f"{id2} 0.5",
             "The user is DMed when they are muted.", "`MUTE_MEMBERS`\n`KICK_MEMBERS`")
