@@ -1,5 +1,5 @@
 # law-enforcer
-## NOTE: This repository is using an experimental concept of separate command files.
+## NOTE: This branch is using an experimental concept of separate command files.
 The repository for my currently WIP bot, Law Enforcer.
 
 Server: [invite](https://discord.gg/PVTBgK6)
