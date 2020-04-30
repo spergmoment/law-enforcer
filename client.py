@@ -1,6 +1,10 @@
 import discord, json, math, asyncio, ast, random, subprocess, os
 from datetime import datetime
-from constants import token, prefix, game, oauth, restart, ids, staticinfo, endinfo, userperms, botperms, botlower, userlower, owneronly, helpCmd
+
+from constants.auth import token, prefix, game, ids
+from constants.info import oauth, restart, staticinfo, endinfo
+from constants.resp import botlower, userlower, owneronly, userperms, botperms
+from constants.help import helpCmd
 
 client = discord.Client()
 
@@ -35,7 +39,7 @@ async def on_ready():
     global startTime
     # used for uptime
     startTime = datetime.now()
-    await client.change_presence(status=discord.Status.online, activity=game)
+    await client.change_presence(status=discord.Status.online, activity=discord.Game(game))
     print("Successfully logged in.")
 
 
@@ -348,6 +352,7 @@ async def on_message(msg):
             # command docs had the exact same pattern
 
             # you can see that pattern in the constants
+            
             helpEmb = helpCmd(helpEmb, 'ping', 'Get the current Client and API ping.', "", False, False,
             "Client ping is the hard Client latency, while the API ping is how long I take to respond.", "None")
         elif args[0] == "ban":
