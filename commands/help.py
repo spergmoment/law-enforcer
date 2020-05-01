@@ -1,15 +1,19 @@
 import discord, random
 
-async def run(args, client, c, ids, helpCmd, oauth):
+async def run(**kwargs):
+    args = kwargs['args']
+    c = kwargs['c']
+    helpCmd = kwargs['helpCmd']
     # initialize an embed
     helpEmb = discord.Embed()
+    ids = kwargs['ids']
     # get 2 random ids from the owners
     id1 = f"<@{ids[random.randint(0, 1)]}>"
     id2 = f"<@{ids[random.randint(0, 1)]}>"
     # no args
     if not len(args) > 0:
         # set an author
-        helpEmb.set_author(name="Invite me here!", url=oauth, icon_url=client.user.avatar_url)
+        helpEmb.set_author(name="Invite me here!", url=kwargs['oauth'], icon_url=kwargs['client'].user.avatar_url)
         # set a title
         helpEmb.title = "All commands"
         # set the description
@@ -23,7 +27,7 @@ async def run(args, client, c, ids, helpCmd, oauth):
         helpEmb.add_field(name="unmute", value="Unmute a user", inline=False)
         helpEmb.add_field(name="clear", value="Clear messages in a channel", inline=False)
         # set the footer
-        helpEmb.set_footer(text="Law Enforcer v0.5", icon_url=client.user.avatar_url)
+        helpEmb.set_footer(text="Law Enforcer v0.5", icon_url=kwargs['client'].user.avatar_url)
     # check what command they want
     elif args[0] == "ping":
         # helpCmd is a helper function I made
@@ -59,5 +63,5 @@ async def run(args, client, c, ids, helpCmd, oauth):
     else:
         helpEmb.title = "Invalid command!"
         helpEmb.description = f"The command you entered, {args[0]}, is invalid."
-        helpEmb.set_footer(text=f"Use {prefix}help for a list of commands.", icon_url=client.user.avatar_url)
+        helpEmb.set_footer(text=f"Use {prefix}help for a list of commands.", icon_url=kwargs['client'].user.avatar_url)
     await c.send(embed=helpEmb)
