@@ -1,22 +1,23 @@
-
-
-async def run(args, msg, g, c, m, botlower, userlower, botperms, userperms):
+async def run(**kwargs):
+    g = kwargs['g']
+    c = kwargs['c']
+    m = kwargs['m']
     if not g.me.guild_permissions.kick_members:
-        return await c.send(botperms('kick members'))
+        return await c.send(kwargs['botperms']('kick members'))
     if not m.guild_permissions.kick_members:
-        return await c.send(userperms('kick_members'))
+        return await c.send(kwargs['userperms']('kick_members'))
     if not g.me.guild_permissions.create_instant_invite:
-        return await c.send(botperms('create invites'))
+        return await c.send(kwargs['botperms']('create invites'))
     if not m.guild_permissions.create_instant_invite:
-        return await c.send(userperms('create_instant_invite'))
-    if not msg.mentions:
+        return await c.send(kwargs['userperms']('create_instant_invite'))
+    if not kwargs['msg'].mentions:
         return await c.send("Please provide a member to kick.")
-    member = msg.mentions[0]
-    reason = " ".join(args[1:len(args)]) or "None"
+    member = kwargs['msg'].mentions[0]
+    reason = " ".join(kwargs['args'][1:len(args)]) or "None"
     if g.me.top_role < member.top_role:
-        return await c.send(botlower)
+        return await c.send(kwargs['botlower'])
     if m.top_role < member.top_role:
-        return await c.send(userlower)
+        return await c.send(kwargs['userlower'])
     inv = await c.create_invite(reason=f"Temporary invite for {member}", max_uses=1)
     try:
         try:
