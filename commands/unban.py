@@ -1,10 +1,14 @@
 import math
 
-async def run(args, client, g, c, m, botperms, userperms):
+async def run(**kwargs):
+    g = kwargs['g']
+    c = kwargs['c']
+    m = kwargs['m']
+    args = kwargs['args']
     if not g.me.guild_permissions.ban_members:
-        return await c.send(botperms('ban members'))
+        return await c.send(kwargs['botperms']('ban members'))
     if not m.guild_permissions.ban_members:
-        return await c.send(userperms('ban_members'))
+        return await c.send(kwargs['userperms']('ban_members'))
     # checks the length of the args
     if len(args) < 1:
         return await c.send(f"Please enter a user ID to unban.\n"
@@ -17,7 +21,7 @@ async def run(args, client, g, c, m, botperms, userperms):
     ban = None
     try:
         # fetch the ban for that user
-        user = client.get_user(id)
+        user = kwargs['client'].get_user(id)
         ban = await g.fetch_ban(user)
     except Exception as e:
         # fetch_ban throws an exception if the user isn't banned, so catch it here to notify the user
