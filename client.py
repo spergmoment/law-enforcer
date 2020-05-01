@@ -6,7 +6,7 @@ from constants.info import oauth, restart as restartcmd, staticinfo, endinfo
 from constants.resp import botlower, userlower, owneronly, userperms, botperms
 from constants.help import helpCmd
 
-from commands import ban, bash, clear, eval, help, info, kick, mute, ping, restart, unban, unmute
+from commands import __dict__ as commands
 
 client = discord.Client()
 
@@ -50,30 +50,10 @@ async def on_message(msg):
     commandfiles = [f for f in os.listdir(f"{pt}/commands") if os.path.isfile(os.path.join(f"{pt}/commands", f))]
     if not f"{cmd}.py" in commandfiles or cmd == "__init__":
         return
-    if cmd == 'ban':
-        await ban.run(args, msg, g, c, m, botlower, userlower, botperms, userperms)
-    if cmd == 'bash':
-        await bash.run(args, c, m, owneronly, ids)
-    if cmd == 'clear':
-        await clear.run(args, g, c, m, botperms, userperms)
-    if cmd == 'eval':
-        await eval.run(args, msg, client, g, c, m, owneronly, ids)
-    if cmd == 'help':
-        await help.run(args, client, c, ids, helpCmd, oauth)
-    if cmd == 'info':
-        await info.run(client, c, startTime, staticinfo, endinfo)
-    if cmd == 'kick':
-        await kick.run(args, msg, g, c, m, botlower, userlower, botperms, userperms)
-    if cmd == 'mute':
-        await mute.run(args, msg, g, c, m, botlower, userlower, botperms, userperms, muted_role)
-    if cmd == 'ping':
-        await ping.run(client, c)
-    if cmd == 'restart':
-        await restart.run(c, m, owneronly, ids, restartcmd)
-    if cmd == 'unban':
-        await unban.run(args, client, g, c, m, botperms, userperms)
-    if cmd == 'unmute':
-        await unmute.run(args, msg, g, c, m, botlower, userlower, botperms, userperms, muted_role)
+    run = commands.get(cmd + "C")
+    await run(args=args, msg=msg, client=client, g=g, c=c, m=m, botlower=botlower,
+    userlower=userlower, botperms=botperms, userperms=userperms, owneronly=owneronly, ids=ids, 
+    helpCmd=helpCmd, oauth=oauth, startTime=startTime, staticinfo=staticinfo, endinfo=endinfo, muted_role=muted_role, restartcmd=restartcmd)
     
 # tries to login with the token
 try:
