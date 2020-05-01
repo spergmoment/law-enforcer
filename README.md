@@ -1,4 +1,4 @@
-# law-enforcer
+# Law Enforcer: Main Branch
 The repository for my currently WIP bot, Law Enforcer.
 
 Server: [invite](https://discord.gg/PVTBgK6)
