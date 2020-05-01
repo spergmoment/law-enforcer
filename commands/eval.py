@@ -1,4 +1,4 @@
-import discord, ast, math
+import discord, ast, math, random
 
 def insert_returns(body):
     # insert return stmt if the last expression is a expression statement
