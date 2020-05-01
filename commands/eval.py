@@ -15,16 +15,17 @@ def insert_returns(body):
     if isinstance(body[-1], ast.With):
         insert_returns(body[-1].body)
 
-async def run(args, msg, client, g, c, m, owneronly, ids):
+async def run(**kwargs):
     # makes sure the user is the owner, check constants
-    if not m.id in ids:
-        return await c.send(owneronly)
-    if not len(args) > 0:
+    c = kwargs['c']
+    if not kwargs['m'].id in kwargs['ids']:
+        return await c.send(kwargs['owneronly'])
+    if not len(kwargs['args']) > 0:
         return await c.send("You must include code to eval!")
     # the following code is modified from https://gist.github.com/nitros12/2c3c265813121492655bc95aa54da6b9. go check that one out
     fn_name = "_eval_expr"
 
-    cmd = " ".join(args).strip("` ")
+    cmd = " ".join(kwargs['args']).strip("` ")
 
     emb = discord.Embed()
     emb.add_field(name="Eval", value=f"```py\n{cmd}```", inline=False)
@@ -42,13 +43,13 @@ async def run(args, msg, client, g, c, m, owneronly, ids):
     insert_returns(body)
     # environment for execution
     env = {
-        'm': m,
-        'g': g,
-        'msg': msg,
+        'm': kwargs['m'],
+        'g': kwargs['g'],
+        'msg': kwargs['msg'],
         'c': c,
         'discord': discord,
         'math': math,
-        'client': client
+        'client': kwargs['client']
     }
     try:
         # eval the code
