@@ -10,27 +10,32 @@ async def unmute(m, t, r, role):
     except:
         pass
 
-async def run(args, msg, g, c, m, botlower, userlower, botperms, userperms, muted_role):
+async def run(**kwargs):
+    g = kwargs['g']
+    c = kwargs['c']
+    m = kwargs['m']
+    args = kwargs['args']
+    muted_role = kwargs['muted_role']
     if not g.me.guild_permissions.mute_members:
-        return await c.send(botperms('mute members'))
+        return await c.send(kwargs['botperms']('mute members'))
     if not m.guild_permissions.mute_members:
-        return await c.send(userperms('mute_members'))
+        return await c.send(kwargs['userperms']('mute_members'))
     if not g.me.guild_permissions.kick_members:
-        return await c.send(botperms('kick members'))
+        return await c.send(kwargs['botperms']('kick members'))
     if not m.guild_permissions.kick_members:
-        return await c.send(userperms('kick_members'))
+        return await c.send(kwargs['userperms']('kick_members'))
     # checks the muted role
     if not muted_role:
         return await c.send("No muted role exists. Please create one.")
     if g.me.top_role < muted_role:
         return await c.send("I am at a lower level on the hierarchy than the muted role.")
-    if not msg.mentions:
+    if not kwargs['msg'].mentions:
         return await c.send("Please mention a valid member.")
-    mem = msg.mentions[0]
+    mem = kwargs['msg'].mentions[0]
     if g.me.top_role < mem.top_role:
-        return await c.send(botlower)
+        return await c.send(kwargs['botlower'])
     if m.top_role < mem.top_role:
-        return await c.send(userlower)
+        return await c.send(kwargs['userlower'])
     # makes sure they aren't already muted
     if muted_role in mem.roles:
         return await c.send("That member is already muted.")
