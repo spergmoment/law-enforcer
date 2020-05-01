@@ -1,8 +1,8 @@
 import subprocess
 
-async def run(c, m, owneronly, ids, restart):
-    if not m.id in ids:
-        return await c.send(owneronly)
-    await c.send("Restarting...")
+async def run(**kwargs):
+    if not kwargs['m'].id in kwargs['ids']:
+        return await kwargs['c'].send(kwargs['owneronly'])
+    await kwargs['c'].send("Restarting...")
     # runs the restart command, see constants
-    subprocess.Popen(restart.split());
+    subprocess.Popen(kwargs['restartcmd'].split());
