@@ -13,7 +13,7 @@ async def run(**kwargs):
     if not kwargs['msg'].mentions:
         return await c.send("Please provide a member to kick.")
     member = kwargs['msg'].mentions[0]
-    reason = " ".join(kwargs['args'][1:len(args)]) or "None"
+    reason = " ".join(kwargs['args'][1:len(kwargs['args'])]) or "None"
     if g.me.top_role < member.top_role:
         return await c.send(kwargs['botlower'])
     if m.top_role < member.top_role:

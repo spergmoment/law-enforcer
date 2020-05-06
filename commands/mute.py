@@ -2,7 +2,7 @@ import math, asyncio
 
 async def unmute(m, t, r, role):
     await asyncio.sleep(t*60*60)
-    if not muted_role in m.roles:
+    if not role in m.roles:
         return
     await m.remove_roles(role, reason=r)
     try:

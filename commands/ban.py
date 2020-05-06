@@ -12,7 +12,7 @@ async def run(**kwargs):
     # uses the first mention
     member = kwargs['msg'].mentions[0]
     # the reason, or "None"
-    reason = " ".join(kwargs['args'][1:len(args)]) or "None"
+    reason = " ".join(kwargs['args'][1:len(kwargs['args'])]) or "None"
     # checks role hierarchy, see constants
     if kwargs['g'].me.top_role < member.top_role:
         return await c.send(kwargs['botlower'])
@@ -31,3 +31,4 @@ async def run(**kwargs):
     # if any error occurs, catch it and send it
     except Exception as e:
         await c.send(f"Error while banning user: {e}")
+

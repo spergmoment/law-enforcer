@@ -5,4 +5,7 @@ async def run(**kwargs):
         return await kwargs['c'].send(kwargs['owneronly'])
     await kwargs['c'].send("Restarting...")
     # runs the restart command, see constants
-    subprocess.Popen(kwargs['restartcmd'].split());
+    try:
+        exit()
+    except:
+        pass

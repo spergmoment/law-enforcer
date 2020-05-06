@@ -23,35 +23,36 @@ async def run(**kwargs):
     if not len(kwargs['args']) > 0:
         return await c.send("You must include code to eval!")
     # the following code is modified from https://gist.github.com/nitros12/2c3c265813121492655bc95aa54da6b9. go check that one out
-    fn_name = "_eval_expr"
-
-    cmd = " ".join(kwargs['args']).strip("` ")
-
-    emb = discord.Embed()
-    emb.add_field(name="Eval", value=f"```py\n{cmd}```", inline=False)
-    emb.color = random.randint(0,16777215)
-
-    # add a layer of indentation
-    cmd = "\n".join(f"    {i}" for i in cmd.splitlines())
-
-    # wrap in async def body
-    body = f"async def {fn_name}():\n{cmd}"
-
-    parsed = ast.parse(body)
-    body = parsed.body[0].body
-
-    insert_returns(body)
-    # environment for execution
-    env = {
-        'm': kwargs['m'],
-        'g': kwargs['g'],
-        'msg': kwargs['msg'],
-        'c': c,
-        'discord': discord,
-        'math': math,
-        'client': kwargs['client']
-    }
     try:
+        fn_name = "_eval_expr"
+
+        cmd = " ".join(kwargs['args']).strip("` ").replace("“", "\"").replace("”", "\"") # for mobile shit
+
+        emb = discord.Embed()
+        emb.add_field(name="Eval", value=f"```py\n{cmd}```", inline=False)
+        emb.color = random.randint(0,16777215)
+
+        # add a layer of indentation
+        cmd = "\n".join(f"    {i}" for i in cmd.splitlines())
+
+        # wrap in async def body
+        body = f"async def {fn_name}():\n{cmd}"
+
+        parsed = ast.parse(body)
+        body = parsed.body[0].body
+
+        insert_returns(body)
+        # environment for execution
+        env = {
+            'm': kwargs['m'],
+            'g': kwargs['g'],
+            'msg': kwargs['msg'],
+            'c': c,
+            'discord': discord,
+            'math': math,
+            'client': kwargs['client'],
+            'message': kwargs['msg']
+        }
         # eval the code
         exec(compile(parsed, filename="<ast>", mode="exec"), env)
 

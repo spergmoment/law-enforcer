@@ -1,6 +1,7 @@
 # Another init file.
-from . import ban, bash, clear, eval, help, info, kick, mute, ping, restart, unban, unmute
+from . import addtag, ban, bash, clear, eval, help, info, kick, mute, ping, removetag, restart, tag, taginfo, unban, unmute
 
+addtagC = addtag.run
 banC = ban.run
 bashC = bash.run
 clearC = clear.run
@@ -10,6 +11,9 @@ infoC = info.run
 kickC = kick.run
 muteC = mute.run
 pingC = ping.run
+removetagC = removetag.run
 restartC = restart.run
+tagC = tag.run
+taginfoC = taginfo.run
 unbanC = unban.run
 unmuteC = unmute.run

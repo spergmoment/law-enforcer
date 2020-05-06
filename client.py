@@ -1,8 +1,9 @@
 import discord, json, math, asyncio, ast, random, subprocess, os
 from datetime import datetime
+from sqlalchemy import Table, Column, Integer, String, MetaData, create_engine
 
 from constants.auth import token, prefix, game, ids
-from constants.info import oauth, restart as restartcmd, staticinfo, endinfo
+from constants.info import oauth, staticinfo, endinfo
 from constants.resp import botlower, userlower, owneronly, userperms, botperms
 from constants.help import helpCmd
 
@@ -11,13 +12,30 @@ from commands import __dict__ as commands
 client = discord.Client()
 
 startTime = 0
+conn = None
+meta = None
+engine = None
+tags = None
 @client.event
 async def on_ready():
-    global startTime
+    global startTime, conn, meta, engine, tags
     # used for uptime
     startTime = datetime.now()
     await client.change_presence(status=discord.Status.online, activity=discord.Game(game))
     print("Successfully logged in.")
+    engine = create_engine('sqlite:///tags.db')
+    meta = MetaData()
+    conn = engine.connect()
+    tags = Table(
+        'tags', meta,
+        Column('name', String, primary_key=True),
+        Column('content', String),
+        Column('creatortag', String),
+        Column('creatorid', Integer),
+        Column('createdat', String),
+        Column('guild', Integer)
+    )
+    meta.create_all(engine)
 
 
 @client.event
@@ -53,7 +71,8 @@ async def on_message(msg):
     run = commands.get(cmd + "C")
     await run(args=args, msg=msg, client=client, g=g, c=c, m=m, botlower=botlower,
     userlower=userlower, botperms=botperms, userperms=userperms, owneronly=owneronly, ids=ids, 
-    helpCmd=helpCmd, oauth=oauth, startTime=startTime, staticinfo=staticinfo, endinfo=endinfo, muted_role=muted_role, restartcmd=restartcmd)
+    helpCmd=helpCmd, oauth=oauth, startTime=startTime, staticinfo=staticinfo, endinfo=endinfo, 
+    muted_role=muted_role, conn=conn, tags=tags, prefix=prefix)
     
 # tries to login with the token
 try:
